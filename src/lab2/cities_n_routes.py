@@ -4,6 +4,8 @@ Lab 2: Cities and Routes
 In the final project, you will need a bunch of cities spread across a map. Here you 
 will generate a bunch of cities and all possible routes between them.
 '''
+import itertools
+import random
 
 def get_randomly_spread_cities(size, n_cities):
     """
@@ -16,17 +18,39 @@ def get_randomly_spread_cities(size, n_cities):
     :return: A list of cities with random x and y coordinates.
     """
     # Consider the condition where x size and y size are different
-    pass
+    #width of map is size(0)
+    #height of map is size(1)
+    #number of cities
 
-def get_routes(cities):
+    #so a city can be between 0 and size[0] on x
+    #and 0 and size[1] on y
+
+    list_cities = ""
+
+    for city in range(n_cities):
+        x_coord = random.randint(0,size[0])
+        y_coord = random.randint(0,size[1])
+        #list_cities += "(" + x_coord + "," + y_coord + ")\n"
+        list_cities += str((x_coord,y_coord))
+
+    return list_cities
+    #pass
+
+def get_routes(city_names):
     """
     It takes a list of cities and returns a list of all possible routes between those cities
     
-    :param cities: a list of cities, each of which is a tuple of coordinates
+    :param cities: a list of city names, each of which is a tuple of coordinates
     :return: A list of tuples representing all possible links between cities, 
             each item in the list (a link) represents a route between two cities.
     """
-    pass
+    list_routes = ""
+
+    for city in city_names:
+        list_routes+=city
+     
+    return list_routes
+    #pass
 
 
 # TODO: Fix variable names
@@ -34,10 +58,10 @@ if __name__ == '__main__':
     city_names = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
     '''print the cities and routes'''
     cities = get_randomly_spread_cities((100, 100), 10)
-    routes = get_routes(cities)
+    routes = get_routes(city_names)
     print('Cities:')
     for i, city in enumerate(cities):
         print(f'{city_names[i]}: {city}')
     print('Routes:')
     for i, route in enumerate(routes):
-        print(f'{i}: {city_names[route[0]]} to {city_names[route[1]]}')
+        print(f'{i}: {route[0]} to {route[1]}')
