@@ -52,12 +52,18 @@ class AiPlayer(Player):
             return self.initial_weapon
         if len(self.opponent_choices) == 2:
             #so within two turns we can sniff out the mimic
+            if(self.opponent_choices[0] == self.my_choices[0]):
+                #okay this is where we handle the error of having the same first choice which would have the mimic use a repeating weapon
+                if (self.my_choices[-1] == 2):
+                    return 0
+                return (self.my_choices[-1]+1)
+                pass
             if (self.opponent_choices[0] != self.opponent_choices[1]):
                 #not either consistent agent
                 #however! depending on the play could the mimic have the same thing twice?
                 #so looking at the code, yes it could probably happen, but unlikely i'd say
-                if(self.my_choices[-1]) == 2:
-                    return (self.my_choices[-1]-2)
+                if (self.my_choices[-1] == 2):
+                    return 0
                 else:
                     return (self.my_choices[-1]+1)
                 pass
