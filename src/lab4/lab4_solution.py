@@ -30,10 +30,12 @@ A model-based reflex agent uses rules (determined by its human creator) to decid
 If your AI is totally random, you should be expected to win about 33% of the time, so here is the requirement:  
 In 100 rounds, you should consistently win at least 85 rounds to be considered a winner.
 
-You get a 1 point for beating the single agent, 2 points for beating the switch agent, 
-and 2 points for beating the mimic agent.
+You get a 0 points for beating the single agent, 1 points for beating the switch agent, 
+and 4 points for beating the mimic agent.
 
 '''
+# Must get win rate above 95% for each of the three agents
+# first part is recognizing which agent you're playing
 
 from rock_paper_scissor import Player
 from rock_paper_scissor import run_game
@@ -45,6 +47,23 @@ class AiPlayer(Player):
         self.initial_weapon = random_weapon_select()
     
     def weapon_selecting_strategy(self):
+        #okay so how should the AI know who they're playing against 
+        if len(self.opponent_choices) == 0:
+            return self.initial_weapon
+        if len(self.opponent_choices) == 2:
+            #so within two turns we can sniff out the mimic
+            if (self.opponent_choices[0] != self.opponent_choices[1]):
+                #not either consistent agent
+                #however! depending on the play could the mimic have the same thing twice?
+                #so looking at the code, yes it could probably happen, but unlikely i'd say
+                if(self.my_choices[-1]) == 2:
+                    return (self.my_choices[-1]-2)
+                else:
+                    return (self.my_choices[-1]+1)
+                pass
+            #okay now to eliminate error, what would we do?
+                
+        return (self.opponent_choices[-1]+1)%3
         pass
 
 
@@ -53,6 +72,9 @@ if __name__ == '__main__':
     for agent in range(3):
         for i in range(100):
             tally = [score for _, score in run_game(AiPlayer("AI"), 100, agent)]
-            final_tally[agent] += tally[0]/sum(tally)
+            if sum(tally) == 0:
+                final_tally[agent] = 0
+            else:
+                final_tally[agent] += tally[0]/sum(tally)
 
     print("Final tally: ", final_tally)  
