@@ -30,7 +30,7 @@ A model-based reflex agent uses rules (determined by its human creator) to decid
 If your AI is totally random, you should be expected to win about 33% of the time, so here is the requirement:  
 In 100 rounds, you should consistently win at least 85 rounds to be considered a winner.
 
-You get a 0 points for beating the single agent, 1 points for beating the switch agent, 
+You get a 0 point for beating the single agent, 1 points for beating the switch agent, 
 and 4 points for beating the mimic agent.
 
 '''
@@ -78,6 +78,10 @@ if __name__ == '__main__':
     for agent in range(3):
         for i in range(100):
             tally = [score for _, score in run_game(AiPlayer("AI"), 100, agent)]
+            if sum(tally) == 0:
+                final_tally[agent] = 0
+            else:
+                final_tally[agent] += tally[0]/sum(tally)
             if sum(tally) == 0:
                 final_tally[agent] = 0
             else:
