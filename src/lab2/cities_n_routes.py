@@ -54,7 +54,7 @@ def get_routes(city_names):
     #pass
 
 
-# TODO: Fix variable names
+# Fix variable names
 if __name__ == '__main__':
     city_names = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
     '''print the cities and routes'''
