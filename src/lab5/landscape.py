@@ -6,7 +6,7 @@ def get_elevation(size): # size = (640, 480)
     xpix, ypix = size
     elevation = np.array([])
     '''Play around with perlin noise to get a better looking landscape (This is required for the lab)'''
-    noise = PerlinNoise(octaves=6, seed=3)  #change this guy to get diff map
+    noise = PerlinNoise(octaves=9, seed=3)  #change this guy to get diff map
     elevation = np.array([[noise([i/xpix, j/ypix]) for j in range(ypix)] for i in range(xpix)])
     return elevation # elevation = 640 by 480
 
