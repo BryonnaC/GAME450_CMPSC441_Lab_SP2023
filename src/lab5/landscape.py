@@ -18,7 +18,7 @@ def elevation_to_rgba(elevation):
     landscape = np.array([colormap(elevation[i, j])[0:3] for i in range(xpix) for j in range(ypix)]).reshape(xpix, ypix, 3)*255
     landscape = landscape.astype('uint8')
     return landscape #landscape = (640, 480, 3)
- 
+
 
 get_landscape = lambda size: elevation_to_rgba(get_elevation(size))
 

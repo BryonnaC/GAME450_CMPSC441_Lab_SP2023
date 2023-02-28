@@ -1,13 +1,13 @@
 '''
 Lab 5: PCG and Project Lab
 
-This a combined procedural content generation and project lab. 
+This a combined procedural content generation and project lab.
 You will be creating the static components of the game that will be used in the project.
 Use the landscape.py file to generate a landscape for the game using perlin noise.
 Use the lab 2 cities_n_routes.py file to generate cities and routes for the game.
 Draw the landscape, cities and routes on the screen using pygame.draw functions.
 Look for triple quotes for instructions on what to do where.
-The intention of this lab is to get you familiar with the pygame.draw functions, 
+The intention of this lab is to get you familiar with the pygame.draw functions,
 use perlin noise to generate a landscape and more importantly,
 build a mindset of writing modular code.
 This is the first time you will be creating code that you may use later in the project.
@@ -30,7 +30,7 @@ from lab2.cities_n_routes import get_randomly_spread_cities, get_routes
 def generate_surface(size):
     landscape = get_landscape(size)
     print("Created a landscape of size", landscape.shape)
-    pygame_surface = pygame.surfarray.make_surface(landscape[:, :, :3]) 
+    pygame_surface = pygame.surfarray.make_surface(landscape[:, :, :3])
 
     return pygame_surface
 

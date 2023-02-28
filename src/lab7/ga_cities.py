@@ -5,7 +5,7 @@ In this lab you will try to generate realistic cities using a genetic algorithm.
 Your cities should not be under water, and should have a realistic distribution across the landscape.
 Your cities may also not be on top of mountains or on top of each other.
 Create the fitness function for your genetic algorithm, so that it fulfills these criterion
-and then use it to generate a population of cities.
+and then use it to generate a population of cities. #recommend implementing one criteria for now, then go from there
 
 Please comment your code in the fitness function to explain how are you making sure each criterion is 
 fulfilled. Clearly explain in comments which line of code and variables are used to fulfill each criterion.
@@ -19,7 +19,7 @@ from pathlib import Path
 
 sys.path.append(str((Path(__file__) / ".." / ".." / "..").resolve().absolute()))
 
-from src.lab5.landscape import elevation_to_rgba
+from src.lab5.landscape import elevation_to_rgba, get_elevation, get_landscape
 
 
 def game_fitness(cities, idx, elevation, size):
@@ -30,6 +30,31 @@ def game_fitness(cities, idx, elevation, size):
     2. The cities should have a realistic distribution across the landscape
     3. The cities may also not be on top of mountains or on top of each other
     """
+    # okay so make citites back into coordinates
+    cities = solution_to_cities(cities, size)
+
+    #cities should not be underwater - elevation
+    # okay so we want to check if a city is underwater? and then move it?
+    # cities is an array of the cities
+    # elevation is an array of length 10000, so it has an elevation for every possible coord on the 100x100 map
+    for city in cities:
+        # check if city location is underwater
+        #print(elevation[[city[0]],city[1]]) #okay okay, now we got it
+
+        # water elevation and below? .3 is just a guess
+        if(elevation[[city[0]],city[1]] < .4):
+            #move the city? idk - move it by how much??? - this doesn't make any sense lmao
+            # I don't think I have to move the city, I just have to change fitness?
+            fitness -= 2
+        else:
+            fitness += .5
+
+        #on a big boi mountain top? not allowed
+        if(elevation[[city[0]],city[1]] > .7):
+            fitness -= 1
+        else:
+            fitness += 1
+
     return fitness
 
 
@@ -52,6 +77,7 @@ def setup_GA(fitness_fn, n_cities, size):
     init_range_low = 0
     init_range_high = size[0] * size[1]
 
+    #don't need to change any of the pygad params, but we can b/c its a sandbox
     parent_selection_type = "sss"
     keep_parents = 10
 
@@ -90,7 +116,7 @@ def solution_to_cities(solution, size):
     """
     cities = np.array(
         list(map(lambda x: [int(x / size[0]), int(x % size[1])], solution))
-    )
+    ) # for each int x we create a list/array which is all of the cities and their coordinates - solution is pixel loc of city (count of pixels away from top left)
     return cities
 
 
@@ -114,7 +140,8 @@ if __name__ == "__main__":
     size = 100, 100
     n_cities = 10
     elevation = []
-    """ initialize elevation here from your previous code"""
+    #""" initialize elevation here from your previous code"""
+    elevation = get_elevation(size)
     # normalize landscape
     elevation = np.array(elevation)
     elevation = (elevation - elevation.min()) / (elevation.max() - elevation.min())
