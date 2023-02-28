@@ -1,5 +1,5 @@
 """
-Lab 7: Realistic Cities 
+Lab 7: Realistic Cities
 
 In this lab you will try to generate realistic cities using a genetic algorithm.
 Your cities should not be under water, and should have a realistic distribution across the landscape.
@@ -33,13 +33,13 @@ def game_fitness(cities, idx, elevation, size):
     # okay so make citites back into coordinates
     cities = solution_to_cities(cities, size)
 
-    #cities should not be underwater - elevation
+    # cities should not be underwater - elevation
     # okay so we want to check if a city is underwater? and then move it?
     # cities is an array of the cities
     # elevation is an array of length 10000, so it has an elevation for every possible coord on the 100x100 map
     for city in cities:
         # check if city location is underwater
-        #print(elevation[[city[0]],city[1]]) #okay okay, now we got it
+        # print(elevation[[city[0]],city[1]]) #okay okay, now we got it
 
         # water elevation and below? .3 is just a guess
         if(elevation[[city[0]],city[1]] < .4):
@@ -54,6 +54,8 @@ def game_fitness(cities, idx, elevation, size):
             fitness -= 1
         else:
             fitness += 1
+
+        #realistic distribution is gonna be annoying
 
     return fitness
 
