@@ -7,12 +7,13 @@ Your cities may also not be on top of mountains or on top of each other.
 Create the fitness function for your genetic algorithm, so that it fulfills these criterion
 and then use it to generate a population of cities. #recommend implementing one criteria for now, then go from there
 
-Please comment your code in the fitness function to explain how are you making sure each criterion is 
+Please comment your code in the fitness function to explain how are you making sure each criterion is
 fulfilled. Clearly explain in comments which line of code and variables are used to fulfill each criterion.
 """
 import matplotlib.pyplot as plt
 import pygad
 import numpy as np
+import math
 
 import sys
 from pathlib import Path
@@ -33,29 +34,53 @@ def game_fitness(cities, idx, elevation, size):
     # okay so make citites back into coordinates
     cities = solution_to_cities(cities, size)
 
-    # cities should not be underwater - elevation
-    # okay so we want to check if a city is underwater? and then move it?
-    # cities is an array of the cities
-    # elevation is an array of length 10000, so it has an elevation for every possible coord on the 100x100 map
+    #okay what if for the distribution, I just copy cities into a new list and compare that way?
+    cities_copy = cities
+
     for city in cities:
         # check if city location is underwater
         # print(elevation[[city[0]],city[1]]) #okay okay, now we got it
 
-        # water elevation and below? .3 is just a guess
+        # This set of if/else checks to see whether the city's elevation
+        # is below .4. This is assuming that .4 and below are under water, in water, or too close to water.
         if(elevation[[city[0]],city[1]] < .4):
-            #move the city? idk - move it by how much??? - this doesn't make any sense lmao
-            # I don't think I have to move the city, I just have to change fitness?
             fitness -= 2
-        else:
-            fitness += .5
-
-        #on a big boi mountain top? not allowed
-        if(elevation[[city[0]],city[1]] > .7):
-            fitness -= 1
         else:
             fitness += 1
 
-        #realistic distribution is gonna be annoying
+        # This set of if/else checks to see whether the city's elevation
+        # is above .7. If it's above .7 it is likely too high elevation.
+        if(elevation[[city[0]],city[1]] > .7):
+            fitness -= 2
+        else:
+            fitness += 1
+
+        # This for loop uses the copied list of cities to compare each city by each other city
+        for city_copy in cities_copy:
+            # This first if statement checks to make sure we aren't comparing the city against itself
+            if((city[0] == city_copy[0]) and (city[1] == city_copy[1])):
+                pass    # they're the same city, would probably want to check the orig list beforehand to make sure no duplicates
+                        # but having duplicates is extremely unlikely
+                break
+            else:
+                # Otherwise, we want to get the distance between the two cities using the algebraic distance formula
+                distance = math.sqrt(pow(city_copy[0] - city[0], 2) + pow(city_copy[1] - city[1], 2))
+                # And then if the distance is less than 1000, it makes the fitness significantly worse
+                # This is to stop the cities from being too close
+                if(distance < 1000):
+                    fitness -= 3
+                # If the distance is larger than 1500, the map should have well distributed cities
+                if(distance > 1500 and distance < 3000):
+                    fitness += 2
+                # But we also want to give a smaller bonus for things being too far, far is good but too far is sparse
+                if(distance > 3000):
+                    fitness += 1
+                # If the distance is between 1000 and 1500, it's okay but we don't want the whole map to be like that
+                if(distance > 1000 and distance < 1500):
+                    fitness += 1
+                pass
+                # Generally I kept the buffs at 1 so that they would all be weighted equally,
+                # but I made the one a value of +2 so that it would be more likely to have a larger impact
 
     return fitness
 
