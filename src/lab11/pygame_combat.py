@@ -60,6 +60,8 @@ def run_pygame_combat(combat_surface, screen, player_sprite):
         AI_SPRITE_PATH, (player_sprite.sprite_pos[0] - 100, player_sprite.sprite_pos[1])
     )
 
+    players = [player, opponent]
+
     # Main Game Loop
     while not currentGame.gameOver:
         draw_combat(combat_surface, screen, player_sprite, opponent_sprite)
@@ -102,6 +104,8 @@ def run_turn(currentGame, player, opponent, players):
     print("%s's health = %d" % (player.name, player.health))
     print("%s's health = %d" % (opponent.name, opponent.health))
     reward = currentGame.checkWin(player, opponent)
+
+    return reward
 
     if reward == 1:
         player2_reward = -1

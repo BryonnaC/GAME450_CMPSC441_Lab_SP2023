@@ -21,6 +21,8 @@ sys.path.append(str((Path(__file__) / ".." / "..").resolve().absolute()))
 from lab11.pygame_combat import PyGameComputerCombatPlayer
 from lab11.turn_combat import CombatPlayer
 from lab12.episode import run_episode
+from lab11.turn_combat import Combat
+from lab11.pygame_ai_player import PyGameAICombatPlayer
 
 from collections import defaultdict
 import random
@@ -47,9 +49,16 @@ class PyGamePolicyCombatPlayer(CombatPlayer):
 
 
 def run_random_episode(player, opponent):
+    curr_episode = Combat()
+
     player.health = random.choice(range(10, 110, 10))
     opponent.health = random.choice(range(10, 110, 10))
-    return run_episode(player, opponent)
+
+    return_list = [ ]
+    while not curr_episode.gameOver:
+        return_list.append(run_episode(curr_episode, player, opponent))
+
+    return return_list
 
 
 def get_history_returns(history):
@@ -74,6 +83,19 @@ def run_episodes(n_episodes):
         Return the action values as a dictionary of dictionaries where the keys are states and 
             the values are dictionaries of actions and their values.
     '''
+    history = [ ]
+    dict_of_dict = { }
+
+    for i in range(0, n_episodes):
+        #curr_episode = Combat()
+        player = PyGameRandomCombatPlayer("Rando")
+        opponent = PyGameComputerCombatPlayer("Computer")
+
+        history.append(run_random_episode(player, opponent))
+
+        get_history_returns(history)
+        #collect returns from get history in a dictionary of dictionaries
+        history.clear
 
     return action_values
 
