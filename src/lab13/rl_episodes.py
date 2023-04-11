@@ -80,22 +80,69 @@ def run_episodes(n_episodes):
         Collect the returns for each state-action pair in a dictionary of dictionaries where the keys are states and
             the values are dictionaries of actions and their returns.
         After all episodes have been run, calculate the average return for each state-action pair.
-        Return the action values as a dictionary of dictionaries where the keys are states and 
+        Return the action values as a dictionary of dictionaries where the keys are states and
             the values are dictionaries of actions and their values.
     '''
     history = [ ]
     dict_of_dict = { }
+    action_values = { }
+    returns = { }
 
     for i in range(0, n_episodes):
         #curr_episode = Combat()
         player = PyGameRandomCombatPlayer("Rando")
         opponent = PyGameComputerCombatPlayer("Computer")
 
-        history.append(run_random_episode(player, opponent))
+        history = run_random_episode(player, opponent)
 
-        get_history_returns(history)
+        returns = get_history_returns(history)
+
+        #okay this is the most recent addition, this one follows logic of
+        #check the state in returns, see if it alreay exists in dict of dict
+        #if it does not - just make it
+        #else find the nested dictionary and append the reward to the exist reward, making it a list
+        #changes i expect to make are chaning "key" and also might need to look more specifically into state-action
+        #in the if statement to decide if i already have the state-action pair or not instead of just the state
+        for state in returns.keys():
+            if state not in dict_of_dict.keys():
+                dict_of_dict[state] = returns[state]
+            else:
+                for key, value_dict in dict_of_dict.items():
+                    for key2, value in value_dict.items():
+                        value.append(returns[key2])
+                        pass
+                    pass
+            pass
+
+        for _ in returns.keys():
+            dict_of_dict[_] = returns[_]
+            #dict_of_dict[state].update(returns[state]) #this doesn't work?? the key value pair has to be unique?
+            #okay eavesdropping says to make rewards a list instead of just copying what returns has
+        #dict_of_dict[state] = returns  #how get state? look into returns?? prob
         #collect returns from get history in a dictionary of dictionaries
-        history.clear
+
+    for state, returns in dict_of_dict.items():
+        #num_rewards = 0
+        for action, reward in returns.items():
+            print(reward)
+            #num_rewards += 1
+        pass
+
+    #now get average return for each state-action pair
+    #for state in dict_of_dict.keys():
+        #average_sum = 0
+        #count = 0
+        #this for loop is wrong. it's missing something
+        #for action in dict_of_dict[state].keys():
+            #state_act_sum = sum(dict_of_dict[state][action])
+            #dict_of_dict[state][action].length()
+            #count += 1
+            #pass
+        #average_state_act_pair = state_act_sum/count
+        #sum(reward for [_][_]:reward in )
+        #sum(reward for dict_of_dict[_][_]:reward)
+        #sum_returns += dict_of_dict[_][_]
+        #pass
 
     return action_values
 
@@ -121,7 +168,8 @@ def test_policy(policy):
 
 
 if __name__ == "__main__":
-    action_values = run_episodes(10000)
+    #action_values = run_episodes(10000)
+    action_values = run_episodes(2000)
     print(action_values)
     optimal_policy = get_optimal_policy(action_values)
     print(optimal_policy)
