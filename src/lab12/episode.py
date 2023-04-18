@@ -27,7 +27,7 @@ def run_episode(episode_of_combat, player1, player2):
     players = [player1, player2]
 
     #while not episode_of_combat.gameOver:
-    reward = run_turn(episode_of_combat, player1, player2, players)
+    reward = run_turn(episode_of_combat, player1, player2)
 
     action = (player1.weapon, player2.weapon)
 

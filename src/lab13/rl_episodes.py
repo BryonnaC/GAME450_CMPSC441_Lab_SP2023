@@ -106,27 +106,76 @@ def run_episodes(n_episodes):
         for state in returns.keys():
             if state not in dict_of_dict.keys():
                 dict_of_dict[state] = returns[state]
-            else:
-                for key, value_dict in dict_of_dict.items():
-                    for key2, value in value_dict.items():
-                        value.append(returns[key2])
-                        pass
-                    pass
-            pass
+            elif state in dict_of_dict.keys():
+                #now see if action is in state
+                curr_actionval = returns[state]
+                curr_dict = dict_of_dict[state]
+                for action, val in curr_actionval.items():
+                    if action not in curr_dict.keys():
+                        dict_of_dict[state] = dict_of_dict[state] | returns[state]
+                        #okay so this should work up to this point
+                        #still need to handle appending individual values in the action val pair
+                        #which i have some code commented out for a bit lower down
+                # for state, a_v_pair in dict_of_dict.items():
+                #     for action, val in a_v_pair.items():
+                #         if action not in curr_actionval.keys():
+                #             dict_of_dict[state] = dict_of_dict[state] | returns[state]
+                pass
+                    #if the state is in the dict o dict already
+                    #we need to know if the action is paired with that state yet
+                    #curr_actionval = returns[state]
+                    #for state in dict_of_dict.items():
 
-        for _ in returns.keys():
-            dict_of_dict[_] = returns[_]
+                    #for action, value in curr_actionval:
+                        #now check if in dict of dict
+                        #
+                    #for state, val_pairs in returns.items():    #get action value pairs in returns
+                    #    for action, value in val_pairs.items(): #get get the action we're looking for
+                            # i dont think we need this many for loops jfc
+
+                #if the state exists - look at the dictionary in it
+                    #for state2, val_pairs in dict_of_dict.items():
+                        #okay here check if the action is already assigned to the state - this is what i'm missing
+                #         for action, value in val_pairs.items():
+
+                #         for action, value in val_pairs.items():
+                #             new_value = [ ]
+                #             new_value.append(value)
+                #             for state, actionval in returns.items():
+                #                 for act, val in actionval.items():
+                #                     new_value.append(actionval[act])
+                #             #new_value.append(returns[state])
+                #             val_pairs[action] = new_value
+                #         pass
+                # pass
+
+                #for state, value_dict in dict_of_dict.items():
+                 #   for action, value in value_dict.items():
+                 #       dict_of_dict[state] = value_dict
+                #dict_of_dict[state] = returns[state]
+            #else:
+            #    for state, value_dict in dict_of_dict.items():
+            #        for action, value in value_dict.items():
+            #            value.append(returns[action])
+
+    #now get action values
+
+    return action_values
+#this part is probably not relevant with new addition above - but we'll see
+       # for _ in returns.keys():
+        #    dict_of_dict[_] = returns[_]
             #dict_of_dict[state].update(returns[state]) #this doesn't work?? the key value pair has to be unique?
             #okay eavesdropping says to make rewards a list instead of just copying what returns has
         #dict_of_dict[state] = returns  #how get state? look into returns?? prob
         #collect returns from get history in a dictionary of dictionaries
 
-    for state, returns in dict_of_dict.items():
+#this part is probably not relevant with new addition above - but we'll see
+    #for state, returns in dict_of_dict.items():
         #num_rewards = 0
-        for action, reward in returns.items():
-            print(reward)
+     #   for action, reward in returns.items():
+      #      print(reward)
             #num_rewards += 1
-        pass
+       # pass
 
     #now get average return for each state-action pair
     #for state in dict_of_dict.keys():
@@ -143,9 +192,6 @@ def run_episodes(n_episodes):
         #sum(reward for dict_of_dict[_][_]:reward)
         #sum_returns += dict_of_dict[_][_]
         #pass
-
-    return action_values
-
 
 def get_optimal_policy(action_values):
     optimal_policy = defaultdict(int)
