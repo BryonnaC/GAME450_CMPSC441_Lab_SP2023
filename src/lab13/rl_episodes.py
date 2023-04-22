@@ -116,66 +116,42 @@ def run_episodes(n_episodes):
                         #okay so this should work up to this point
                         #still need to handle appending individual values in the action val pair
                         #which i have some code commented out for a bit lower down
-                # for state, a_v_pair in dict_of_dict.items():
-                #     for action, val in a_v_pair.items():
-                #         if action not in curr_actionval.keys():
-                #             dict_of_dict[state] = dict_of_dict[state] | returns[state]
+                    elif action in curr_dict.keys():
+                        curr_value = curr_dict[action]
+                        if type(curr_value) is list:
+                            curr_dict[action].append(val)
+                            # for item_list in curr_dict[action]:
+                            #     for item in item_list:
+                            #         val_list.append(item)
+                        else:
+                            val_list = []
+                            val_list.append(curr_dict[action])
+                            val_list.append(val)
+                            curr_dict[action] = val_list
                 pass
-                    #if the state is in the dict o dict already
-                    #we need to know if the action is paired with that state yet
-                    #curr_actionval = returns[state]
-                    #for state in dict_of_dict.items():
-
-                    #for action, value in curr_actionval:
-                        #now check if in dict of dict
-                        #
-                    #for state, val_pairs in returns.items():    #get action value pairs in returns
-                    #    for action, value in val_pairs.items(): #get get the action we're looking for
-                            # i dont think we need this many for loops jfc
-
-                #if the state exists - look at the dictionary in it
-                    #for state2, val_pairs in dict_of_dict.items():
-                        #okay here check if the action is already assigned to the state - this is what i'm missing
-                #         for action, value in val_pairs.items():
-
-                #         for action, value in val_pairs.items():
-                #             new_value = [ ]
-                #             new_value.append(value)
-                #             for state, actionval in returns.items():
-                #                 for act, val in actionval.items():
-                #                     new_value.append(actionval[act])
-                #             #new_value.append(returns[state])
-                #             val_pairs[action] = new_value
-                #         pass
-                # pass
-
-                #for state, value_dict in dict_of_dict.items():
-                 #   for action, value in value_dict.items():
-                 #       dict_of_dict[state] = value_dict
-                #dict_of_dict[state] = returns[state]
-            #else:
-            #    for state, value_dict in dict_of_dict.items():
-            #        for action, value in value_dict.items():
-            #            value.append(returns[action])
-
     #now get action values
+    for state, action_val_pair in dict_of_dict.items():
+        for action, value in action_val_pair.items():
+            #get average for each state action pair
+            if type(value) is int:
+                inner_dict = { }
+                inner_dict[action] = value
+                if state in action_values.keys():
+                    action_values[state] = action_values[state] | inner_dict
+                else:
+                    action_values[state] = inner_dict
+            else:
+                num_vals = len(value)
+                sum_vals = sum(value)
+                avg_vals = sum_vals/num_vals
+                inner_dict = { }
+                inner_dict[action] = avg_vals
+                if state in action_values.keys():
+                    action_values[state] = action_values[state] | inner_dict
+                else:
+                    action_values[state] = inner_dict
 
     return action_values
-#this part is probably not relevant with new addition above - but we'll see
-       # for _ in returns.keys():
-        #    dict_of_dict[_] = returns[_]
-            #dict_of_dict[state].update(returns[state]) #this doesn't work?? the key value pair has to be unique?
-            #okay eavesdropping says to make rewards a list instead of just copying what returns has
-        #dict_of_dict[state] = returns  #how get state? look into returns?? prob
-        #collect returns from get history in a dictionary of dictionaries
-
-#this part is probably not relevant with new addition above - but we'll see
-    #for state, returns in dict_of_dict.items():
-        #num_rewards = 0
-     #   for action, reward in returns.items():
-      #      print(reward)
-            #num_rewards += 1
-       # pass
 
     #now get average return for each state-action pair
     #for state in dict_of_dict.keys():
@@ -208,14 +184,14 @@ def test_policy(policy):
         player2 = PyGameComputerCombatPlayer(names[1])
         players = [player1, player2]
         total_reward += sum(
-            [reward for _, _, reward in run_episode(*players)]
+            [reward for _, _, reward in run_episode(None, *players)]
         )
     return total_reward / 100
 
 
 if __name__ == "__main__":
-    #action_values = run_episodes(10000)
-    action_values = run_episodes(2000)
+    action_values = run_episodes(10000)
+    #action_values = run_episodes(2000)
     print(action_values)
     optimal_policy = get_optimal_policy(action_values)
     print(optimal_policy)

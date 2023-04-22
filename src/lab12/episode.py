@@ -22,7 +22,8 @@ from lab11.pygame_human_player import PyGameHumanCombatPlayer
 
 
 def run_episode(episode_of_combat, player1, player2):
-    #episode_of_combat = Combat()
+    if(episode_of_combat is None):
+        episode_of_combat = Combat()
 
     players = [player1, player2]
 
