@@ -1,6 +1,7 @@
 import sys
 import pygame
 import random
+import numpy
 from lab11.sprite import Sprite
 from lab11.pygame_combat import run_pygame_combat
 from lab11.pygame_human_player import PyGameHumanPlayer
@@ -12,6 +13,7 @@ from pathlib import Path
 sys.path.append(str((Path(__file__) / ".." / "..").resolve().absolute()))
 
 from lab2.cities_n_routes import get_randomly_spread_cities, get_routes
+from lab3.travel_cost import get_route_costs
 from lab7.ga_cities import psuedo_ga_main
 
 pygame.font.init()
@@ -100,9 +102,13 @@ def psuedo_agent_environ_main():
     random.shuffle(routes)
     routes = routes[:10]
 
+    costs = get_route_costs(cities, city_names, routes, elevation)
+    route_list = routes
+
     player_sprite = Sprite(sprite_path, cities[start_city])
 
-    player = PyGameHumanPlayer()
+    #start the player with some money
+    player = PyGameHumanPlayer(500)
 
     state = State(
         current_city=start_city,
@@ -115,20 +121,48 @@ def psuedo_agent_environ_main():
 
     while True:
         action = player.selectAction(state)
-        #had to change some lines of code since AI is not returning an action to be casted, just an int
-        #if 0 <= int(chr(action)) <= 9:
-        if 0 <= action <= 9:
-            #if int(chr(action)) != state.current_city and not state.travelling:
-            if action != state.current_city and not state.travelling:
+        if 0 <= int(chr(action)) <= 9:
+            if int(chr(action)) != state.current_city and not state.travelling:
+                '''check if route is valid AND if player has enough money'''
+                #check if current city and desired city make a valid route
                 start = cities[state.current_city]
-                #state.destination_city = int(chr(action))
-                state.destination_city = action
+                state.destination_city = int(chr(action))
                 destination = cities[state.destination_city]
-                player_sprite.set_location(cities[state.current_city])
-                state.travelling = True
-                print(
-                    "Travelling from", state.current_city, "to", state.destination_city
-                )
+                count = 0
+                for route in route_list:
+                    if route[0][0] == start[0] and route[1][0] == destination[0]:
+                    #if [numpy.asarray(start), numpy.asarray(destination)] in routes:
+                        route_num = count
+                        if costs[route_num] <= player.money:
+                            #run turn
+                            player_sprite.set_location(cities[state.current_city])
+                            player.money -= costs[route_num]
+                            state.travelling = True
+                            print(
+                            "Travelling from", state.current_city, "to", state.destination_city
+                            )
+                            print("You now have ", player.money, " money left.")
+                            pass
+                        else:
+                            #cannot afford
+                            print("Not Enough Money!")
+                            continue
+                    else:
+                        #not a valid route
+                        print("Pick a route that is connected to where you are now!")
+                        count += 1
+                        #TODO check if there is ANY valid route or if player ran out of money
+                        continue
+                    continue
+                #then check if the player can afford it (if valid)
+                # start = cities[state.current_city]
+                # state.destination_city = action
+                # destination = cities[state.destination_city]
+                # player_sprite.set_location(cities[state.current_city])
+                # state.travelling = True
+                # print(
+                #     "Travelling from", state.current_city, "to", state.destination_city
+                # )
 
         screen.fill(black)
         screen.blit(landscape_surface, (0, 0))
@@ -155,7 +189,16 @@ def psuedo_agent_environ_main():
             state.current_city = state.destination_city
 
         if state.encounter_event:
-            run_pygame_combat(combat_surface, screen, player_sprite)
+            result = run_pygame_combat(combat_surface, screen, player_sprite)
+            if result == 1 or result == 0:
+                #pay player
+                player.money += 200
+                print("You now have ", player.money)
+                pass
+            elif result == -1:
+                #you lose - end game
+                print("You were defeated by the combatant! Game over.")
+                break
             state.encounter_event = False
         else:
             player_sprite.draw_sprite(screen)
@@ -199,7 +242,7 @@ if __name__ == "__main__":
 
     player = PyGameHumanPlayer()
 
-    """ Add a line below that will reset the player variable to 
+    """ Add a line below that will reset the player variable to
     a new object of PyGameAIPlayer class."""
     player = PyGameAIPlayer()
 

@@ -15,5 +15,5 @@ a = ['a', 'b', 'c']
 for acombo in itertools.combinations(a, 2):
     print(acombo)
 
-import random 
+import random
 random.randint()

@@ -2,16 +2,16 @@
 Lab 3: Travel Cost
 
 Your player will need to move from one city to another in order to complete the game.
-The player will have to spend money to travel between cities. The cost of travel depends 
+The player will have to spend money to travel between cities. The cost of travel depends
 on the difficulty of the terrain.
 In this lab, you will write a function that calculates the cost of a route between two cities,
-A terrain is generated for you 
+A terrain is generated for you
 '''
 import numpy as np
 
 def get_route_cost(route_coordinate, game_map):
     """
-    This function takes in a route_coordinate as a tuple of coordinates of cities to connect, 
+    This function takes in a route_coordinate as a tuple of coordinates of cities to connect,
     example:  and a game_map as a numpy array of floats,
     remember from previous lab the routes looked like this: [(A, B), (A, C)]
     route_coordinates is just inserts the coordinates of the cities into a route like (A, C).
@@ -26,9 +26,9 @@ def get_route_cost(route_coordinate, game_map):
       |-----------|
     3 |   | C |   |
       -------------
-        I   J   K 
+        I   J   K
 
-    Cost between cities A and C is the sum of the costs of the cells 
+    Cost between cities A and C is the sum of the costs of the cells
         I1, I2, J2 and J3.
     Alternatively you could use a direct path from A to C that uses diagonal movement, like
         I1, J2, J3
@@ -47,12 +47,12 @@ def get_route_cost(route_coordinate, game_map):
     print(city_one)
     print(city_two)
 
-    # Split the tuples into individual coordinates 
+    # Split the tuples into individual coordinates
     city_one_x = city_one[0]
     city_one_y = city_one[1]
     city_two_x = city_two[0]
     city_two_y = city_two[1]
-    
+
     # We want to go diagonal in the X direction according to lab instructions
     # So compare the x's of city one and city two
     x_diff = city_two_x - city_one_x
@@ -121,14 +121,14 @@ def get_route_cost(route_coordinate, game_map):
     for j in range(1, remain_moves):
       # TODO this is not optimal
       if(x_abs > y_abs):
-        if(x_diff > 0):              
+        if(x_diff > 0):
           working_x += 1
         if(x_diff < 0):
           working_x -= 1
         # Combine with last known working_y
         path_item = (working_x,working_y)
-        path.append(path_item)        # TODO ultra repetitive code 
-      
+        path.append(path_item)        # TODO ultra repetitive code
+
       if(y_abs > x_abs):
         if(y_diff > 0):
           working_y += 1
@@ -136,10 +136,10 @@ def get_route_cost(route_coordinate, game_map):
           working_y -= 1
         # Combine with last known working_x
         path_item = (working_x,working_y)
-        path.append(path_item)        # TODO ultra repetitive code 
+        path.append(path_item)        # TODO ultra repetitive code
 
     path.append(city_two)
-    #pass 
+    #pass
     return game_map[tuple(zip(*path))].sum()
 
 
@@ -148,6 +148,7 @@ def route_to_coordinates(city_locations, city_names, routes):
     route_coordinates = []
     for route in routes:
         start = city_names.index(route[0])
+        #start = city_names[route[0]]
         end = city_names.index(route[1])
         route_coordinates.append((city_locations[start], city_locations[end]))
     return route_coordinates
@@ -157,6 +158,17 @@ def generate_terrain(map_size):
     """ generate a terrain map of size map_size """
     return np.random.rand(*map_size)
 
+def get_route_costs(city_locations, city_names, routes, game_map):
+  costs = [ ]
+  #route_coordinates = route_to_coordinates(city_locations, city_names, routes)
+
+  for route in routes:
+    costs.append(get_route_cost(route, game_map))
+    print(f'Cost between {route[0]} and {route[1]}: {get_route_cost(route, game_map)}')
+  return costs
+  # for route, route_coordinate in zip(routes, route_coordinates):
+  #     costs.append(get_route_cost(route_coordinate, game_map))
+  #     print(f'Cost between {route[0]} and {route[1]}: {get_route_cost(route_coordinate, game_map)}')
 
 def main():
     # Ignore the following 4 lines. This is bad practice, but it's just to make the code work in the lab.
@@ -165,7 +177,7 @@ def main():
     sys.path.append(str((Path(__file__)/'..'/'..').resolve().absolute()))
     from lab2.cities_n_routes import get_randomly_spread_cities, get_routes
 
-    city_names = ['Morkomasto', 'Morathrad', 'Eregailin', 'Corathrad', 'Eregarta', 
+    city_names = ['Morkomasto', 'Morathrad', 'Eregailin', 'Corathrad', 'Eregarta',
                   'Numensari', 'Rhunkadi', 'Londathrad', 'Baernlad', 'Forthyr']
     map_size = 300, 200
 
