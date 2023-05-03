@@ -1,4 +1,4 @@
-''' 
+'''
 Lab 2: Cities and Routes
 
 In the final project, you will need a bunch of cities spread across a map. Here you 
@@ -12,7 +12,7 @@ def get_randomly_spread_cities(size, n_cities):
     > This function takes in the size of the map and the number of cities to be generated 
     and returns a list of cities with their x and y coordinates. The cities are randomly spread
     across the map.
-    
+
     :param size: the size of the map as a tuple of 2 integers
     :param n_cities: The number of cities to generate
     :return: A list of cities with random x and y coordinates.

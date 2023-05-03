@@ -38,7 +38,7 @@ def draw_combat_on_window(combat_surface, screen, player_sprite, opponent_sprite
     pygame.display.update()
 
 
-def run_turn(currentGame, player, opponent):
+def run_turn1(currentGame, player, opponent):
     players = [player, opponent]
     states = list(reversed([(player.health, player.weapon) for player in players]))
     for current_player, state in zip(players, states):
@@ -74,7 +74,7 @@ def run_pygame_combat(combat_surface, screen, player_sprite):
         #draw_combat_on_window(combat_surface, screen, player_sprite, opponent_sprite)
         #run_turn(currentGame, player, opponent)
 
-def run_turn(currentGame, player, opponent):
+def run_turn1(currentGame, player, opponent):
     players = [player, opponent]
     states = list(reversed([(player.health, player.weapon) for player in players]))
     for current_player, state in zip(players, states):
@@ -89,8 +89,7 @@ def run_turn(currentGame, player, opponent):
     return reward
 
 
-def run_turn2(currentGame, player, opponent, players):
-    return
+def run_turn(currentGame, player, opponent, players):
     states = list(reversed([(player.health, player.weapon) for player in players]))
     for current_player, state in zip(players, states):
         current_player.selectAction(state)
@@ -99,20 +98,7 @@ def run_turn2(currentGame, player, opponent, players):
     currentGame.takeTurn(player, opponent)
     print("%s's health = %d" % (player.name, player.health))
     print("%s's health = %d" % (opponent.name, opponent.health))
-    reward = currentGame.checkWin(player, opponent)
-
-    return reward
-
-    if reward == 1:
-        player2_reward = -1
-    if reward == 0:
-        player2_reward = 0
-    if reward == -1:
-        player2_reward = 1
-
-    reward_tuple = [reward, player2_reward]
-
-    return reward_tuple #this bit he'll leave up to us
+    currentGame.checkWin(player, opponent)
 
 
 def draw_combat(combat_surface, screen, player_sprite, opponent_sprite):

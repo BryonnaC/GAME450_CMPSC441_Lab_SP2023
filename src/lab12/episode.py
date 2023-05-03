@@ -16,7 +16,7 @@ from pathlib import Path
 sys.path.append(str((Path(__file__) / ".." / "..").resolve().absolute()))
 
 from lab11.turn_combat import Combat
-from lab11.pygame_combat import run_turn, PyGameComputerCombatPlayer
+from lab11.pygame_combat import run_turn1, PyGameComputerCombatPlayer
 from lab11.pygame_ai_player import PyGameAICombatPlayer
 from lab11.pygame_human_player import PyGameHumanCombatPlayer
 
@@ -28,7 +28,7 @@ def run_episode(episode_of_combat, player1, player2):
     players = [player1, player2]
 
     #while not episode_of_combat.gameOver:
-    reward = run_turn(episode_of_combat, player1, player2)
+    reward = run_turn1(episode_of_combat, player1, player2)
 
     action = (player1.weapon, player2.weapon)
 
