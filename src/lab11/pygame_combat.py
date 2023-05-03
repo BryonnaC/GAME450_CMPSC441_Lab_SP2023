@@ -1,5 +1,8 @@
+import sys
 import pygame
 from pathlib import Path
+
+sys.path.append(str((Path(__file__) / ".." / "..").resolve().absolute()))
 
 from lab11.sprite import Sprite
 from lab11.turn_combat import CombatPlayer, Combat
