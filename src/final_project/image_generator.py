@@ -8,6 +8,9 @@ def draw_journal_picture():
         text = "victory against combatant|forest path|rocky terrain",
         image_size=256,
         save_every = 25,
+        epochs=5,
+        iterations=500,
+        num_cutouts=32,
         save_progress = False
     )
     dream()

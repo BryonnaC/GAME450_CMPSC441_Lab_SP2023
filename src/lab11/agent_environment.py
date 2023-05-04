@@ -124,6 +124,16 @@ def psuedo_agent_environ_main():
         action = player.selectAction(state)
         if 0 <= int(chr(action)) <= 9:
             if int(chr(action)) != state.current_city and not state.travelling:
+                can_progess = 0
+                for i in range(0,9):
+                    #check if there are any affordable routes
+                    if costs[i] <= player.money:
+                        can_progess = 1
+                    pass
+                if can_progess == 0:
+                    print("You don't have enough money to take any of these paths! Game over.")
+                    break
+
                 '''check if route is valid AND if player has enough money'''
                 #check if current city and desired city make a valid route
                 start = cities[state.current_city]
@@ -132,7 +142,6 @@ def psuedo_agent_environ_main():
                 count = 0
                 for route in route_list:
                     if route[0][0] == start[0] and route[1][0] == destination[0]:
-                    #if [numpy.asarray(start), numpy.asarray(destination)] in routes:
                         route_num = count
                         if costs[route_num] <= player.money:
                             #run turn
@@ -149,21 +158,10 @@ def psuedo_agent_environ_main():
                             print("Not Enough Money!")
                             continue
                     else:
-                        #not a valid route
-                        print("Pick a route that is connected to where you are now!")
+                        #not the route I'm looking for
                         count += 1
-                        #TODO check if there is ANY valid route or if player ran out of money
                         continue
                     continue
-                #then check if the player can afford it (if valid)
-                # start = cities[state.current_city]
-                # state.destination_city = action
-                # destination = cities[state.destination_city]
-                # player_sprite.set_location(cities[state.current_city])
-                # state.travelling = True
-                # print(
-                #     "Travelling from", state.current_city, "to", state.destination_city
-                # )
 
         screen.fill(black)
         screen.blit(landscape_surface, (0, 0))
