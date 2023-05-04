@@ -5,11 +5,9 @@ torch.cuda.empty_cache()
 
 def draw_journal_picture():
     dream = Imagine(
-        text = "mountain view",
-        image_size=128,
-        save_every = 1,
-        epochs=1,
-        iterations=200,
+        text = "victory against combatant|forest path|rocky terrain",
+        image_size=256,
+        save_every = 25,
         save_progress = False
     )
     dream()

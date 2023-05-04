@@ -15,6 +15,7 @@ sys.path.append(str((Path(__file__) / ".." / "..").resolve().absolute()))
 from lab2.cities_n_routes import get_randomly_spread_cities, get_routes
 from lab3.travel_cost import get_route_costs
 from lab7.ga_cities import psuedo_ga_main
+from final_project.image_generator import draw_journal_picture
 
 pygame.font.init()
 game_font = pygame.font.SysFont("Comic Sans MS", 15)
@@ -194,6 +195,7 @@ def psuedo_agent_environ_main():
                 #pay player
                 player.money += 200
                 print("You now have ", player.money)
+                draw_journal_picture()
                 pass
             elif result == -1:
                 #you lose - end game
